@@ -3,6 +3,7 @@ package com.example.hrms.api.controllers;
 import java.util.List;
 
 import com.example.hrms.business.abstracts.JobTitleService;
+import com.example.hrms.core.utilities.results.DataResult;
 import com.example.hrms.entities.concretes.JobTitle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +22,8 @@ public class JobTitlesController {
         this.jobTitleService = jobTitleService;
     }
 
-
     @GetMapping("/getall")
-    public List<JobTitle> getAll() {
+    public DataResult<List<JobTitle>> getAll() {
         return this.jobTitleService.getAll();
     }
 
