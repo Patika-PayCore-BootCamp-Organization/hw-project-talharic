@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface JobTitleService {
     List<JobTitle> getAll();
+
 }
