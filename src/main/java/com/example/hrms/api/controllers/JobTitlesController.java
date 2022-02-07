@@ -17,7 +17,6 @@ public class JobTitlesController {
 
     @Autowired
     public JobTitlesController(JobTitleService jobTitleService) {
-        super();
         this.jobTitleService = jobTitleService;
     }
 
