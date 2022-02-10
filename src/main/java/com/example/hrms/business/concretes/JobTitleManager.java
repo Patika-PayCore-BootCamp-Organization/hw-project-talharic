@@ -23,7 +23,7 @@ public class JobTitleManager implements JobTitleService {
     @Override
     public Result add(JobTitle jobTitle) {
 
-        if (checkIfJobTitleExists(jobTitle.getTitle())) {
+        if (!checkIfJobTitleExists(jobTitle.getTitle())) {
             return new ErrorResult("Eklemek istediğiniz iş pozisyonu zaten mevcut.");
         }
 
@@ -55,6 +55,11 @@ public class JobTitleManager implements JobTitleService {
         return new SuccessDataResult<JobTitle>(jobTitleDao.getById(id));
     }
 
+    @Override
+    public DataResult<JobTitle> getByTitle(String title) {
+        return new SuccessDataResult<JobTitle>(jobTitleDao.getByTitle(title));
+    }
+
     private boolean checkIfJobTitleExists(String title) {
 
         boolean result = false;
@@ -64,11 +69,6 @@ public class JobTitleManager implements JobTitleService {
         }
 
         return result;
-    }
-
-    @Override
-    public DataResult<JobTitle> getByTitle(String title) {
-        return new SuccessDataResult<JobTitle>(jobTitleDao.getByTitle(title));
     }
 
 }
