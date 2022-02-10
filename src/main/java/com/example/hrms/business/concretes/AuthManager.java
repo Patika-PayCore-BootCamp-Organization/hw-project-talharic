@@ -8,7 +8,6 @@ import com.example.hrms.core.utilities.results.ErrorResult;
 import com.example.hrms.core.utilities.results.Result;
 import com.example.hrms.entities.concretes.Candidate;
 import com.example.hrms.entities.concretes.Employer;
-import com.example.hrms.entities.concretes.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +35,12 @@ public class AuthManager implements AuthService {
             return new ErrorResult("Lütfen geçerli bir e-posta adresi giriniz.");
         }
 
-        if (checkIfEmailExists(candidate.getEmail())) {
+        if (!checkIfEmailExists(candidate.getEmail())) {
             return new ErrorResult("Girilen e-posta adresi başka bir hesaba aittir.");
+        }
+
+        if (!checkIfPasswordIsNull(candidate.getPassword())) {
+            return new ErrorResult("Lütfen boş alanları doldurunuz.");
         }
 
         if (!checkIfPasswordsMatch(candidate.getPassword(), confirmPassword)) {
@@ -54,8 +57,12 @@ public class AuthManager implements AuthService {
             return new ErrorResult("Lütfen geçerli bir e-posta adresi giriniz.");
         }
 
-        if (checkIfEmailExists(employer.getEmail())) {
+        if (!checkIfEmailExists(employer.getEmail())) {
             return new ErrorResult("Girilen e-posta adresi başka bir hesaba aittir.");
+        }
+
+        if (!checkIfPasswordIsNull(employer.getPassword())) {
+            return new ErrorResult("Lütfen boş alanları doldurunuz.");
         }
 
         if (!checkIfPasswordsMatch(employer.getPassword(), confirmPassword)) {
@@ -77,10 +84,19 @@ public class AuthManager implements AuthService {
 
         boolean result = false;
 
-        for (User user : userService.getAll().getData()) {
-            if (user.getEmail() == email) {
-                result = true;
-            }
+        if (userService.getByEmail(email).getData() == null) {
+            result = true;
+        }
+
+        return result;
+    }
+
+    private boolean checkIfPasswordIsNull(String password) {
+
+        boolean result = false;
+
+        if (password != null) {
+            result = true;
         }
 
         return result;

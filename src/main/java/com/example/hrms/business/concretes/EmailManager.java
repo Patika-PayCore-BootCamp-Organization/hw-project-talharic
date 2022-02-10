@@ -12,7 +12,7 @@ public class EmailManager implements EmailService {
     @Override
     public Result sendEmail(User user) {
 
-        return new SuccessResult();
+        return new SuccessResult(user.getEmail() + " adresine e-posta gönderildi.");
     }
 
 }

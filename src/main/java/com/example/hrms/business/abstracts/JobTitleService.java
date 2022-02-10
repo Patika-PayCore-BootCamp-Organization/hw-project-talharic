@@ -7,6 +7,7 @@ import com.example.hrms.entities.concretes.JobTitle;
 import java.util.List;
 
 public interface JobTitleService {
+
     Result add(JobTitle jobTitle);
 
     Result update(JobTitle jobTitle);
@@ -16,4 +17,8 @@ public interface JobTitleService {
     DataResult<List<JobTitle>> getAll();
 
     DataResult<JobTitle> getById(int id);
+
+    DataResult<JobTitle> getByTitle(String title);
+
 }
+
