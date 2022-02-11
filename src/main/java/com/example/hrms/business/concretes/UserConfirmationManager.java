@@ -2,15 +2,14 @@ package com.example.hrms.business.concretes;
 
 import com.example.hrms.business.abstracts.EmailService;
 import com.example.hrms.business.abstracts.UserConfirmationService;
-import com.example.hrms.core.utilities.results.ErrorResult;
-import com.example.hrms.core.utilities.results.Result;
-import com.example.hrms.core.utilities.results.SuccessResult;
+import com.example.hrms.core.utilities.results.*;
 import com.example.hrms.dataAccess.abstracts.UserConfirmationDao;
 import com.example.hrms.entities.concretes.UserConfirmation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class UserConfirmationManager implements UserConfirmationService {
@@ -31,12 +30,31 @@ public class UserConfirmationManager implements UserConfirmationService {
 
         userConfirmationDao.save(userConfirmation);
         emailService.sendEmail(userConfirmation.getUser());
+        return new SuccessResult();
+    }
 
-        if (userConfirmation.isConfirmed() == false) {
-            return new ErrorResult("Üyelik onaylanmadı.");
-        }
+    @Override
+    public Result update(UserConfirmation userConfirmation) {
 
-        return new SuccessResult("Üyelik onaylandı.");
+        userConfirmationDao.save(userConfirmation);
+        return new SuccessResult();
+    }
+
+    @Override
+    public Result delete(UserConfirmation userConfirmation) {
+
+        userConfirmationDao.delete(userConfirmation);
+        return new SuccessResult();
+    }
+
+    @Override
+    public DataResult<List<UserConfirmation>> getAll() {
+        return new SuccessDataResult<List<UserConfirmation>>(userConfirmationDao.findAll());
+    }
+
+    @Override
+    public DataResult<UserConfirmation> getById(int id) {
+        return new SuccessDataResult<UserConfirmation>(userConfirmationDao.getById(id));
     }
 
 }
