@@ -1,6 +1,5 @@
 package com.example.hrms.business.adapters;
 
-import java.time.LocalDate;
 
 public interface UserCheckService {
 

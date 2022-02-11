@@ -8,6 +8,7 @@ import com.example.hrms.dataAccess.abstracts.CandidateDao;
 import com.example.hrms.entities.concretes.Candidate;
 import com.example.hrms.entities.concretes.UserActivation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,7 +22,7 @@ public class CandidateManager implements CandidateService {
     private UserActivationService userActivationService;
 
     @Autowired
-    public CandidateManager(CandidateDao candidateDao, UserCheckService userCheckService, UserActivationService userActivationService) {
+    public CandidateManager(CandidateDao candidateDao, @Qualifier("") UserCheckService userCheckService, UserActivationService userActivationService) {
         this.candidateDao = candidateDao;
         this.userCheckService = userCheckService;
         this.userActivationService = userActivationService;
@@ -30,8 +31,7 @@ public class CandidateManager implements CandidateService {
     @Override
     public Result add(Candidate candidate) {
 
-        if (!userCheckService.checkIfRealPerson(candidate.getIdentityNumber(), candidate.getFirstName(),
-                candidate.getLastName(), candidate.getYearOfBirth())) {
+        if (!userCheckService.checkIfRealPerson(candidate.getIdentityNumber(), candidate.getFirstName(), candidate.getLastName(), candidate.getYearOfBirth())) {
             return new ErrorResult("Lütfen bilgilerinizi doğru giriniz.");
         }
 
@@ -40,6 +40,7 @@ public class CandidateManager implements CandidateService {
         }
 
         candidate.setActivated(false);
+
         candidateDao.save(candidate);
         return userActivationService.add(new UserActivation(candidate));
     }
@@ -82,10 +83,13 @@ public class CandidateManager implements CandidateService {
             return new ErrorResult("Geçersiz bir kod girdiniz.");
         }
 
-        getById(userActivation.getUser().getId()).getData().setActivated(true);
+        Candidate candidate = getById(userActivation.getUser().getId()).getData();
+
+        candidate.setActivated(true);
         userActivation.setIsActivatedDate(LocalDate.now());
 
-        userActivationService.update(userActivationService.getByCode(code).getData());
+        update(candidate);
+        userActivationService.update(userActivation);
         return new SuccessResult("Üyelik işlemleri tamamlanmıştır.");
     }
 

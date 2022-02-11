@@ -41,18 +41,21 @@ public class EmployerManager implements EmployerService {
 
         employer.setActivated(false);
         employer.setConfirmed(false);
+
         employerDao.save(employer);
         return userActivationService.add(new UserActivation(employer));
     }
 
     @Override
     public Result update(Employer employer) {
+
         employerDao.save(employer);
         return new SuccessResult();
     }
 
     @Override
     public Result delete(Employer employer) {
+
         employerDao.delete(employer);
         return new SuccessResult();
     }
@@ -82,9 +85,12 @@ public class EmployerManager implements EmployerService {
             return new ErrorResult("Geçersiz bir kod girdiniz.");
         }
 
-        getById(userActivation.getUser().getId()).getData().setActivated(true);
+        Employer employer = getById(userActivation.getUser().getId()).getData();
+
+        employer.setActivated(true);
         userActivation.setIsActivatedDate(LocalDate.now());
 
+        update(employer);
         userActivationService.update(userActivation);
         return new SuccessResult("Üyeliğiniz onay aşamasındadır.");
     }
@@ -102,6 +108,7 @@ public class EmployerManager implements EmployerService {
         }
 
         employer.setConfirmed(isConfirmed);
+
         userConfirmationService.add(new UserConfirmation(employer, companyStaff));
         return new SuccessResult("Üyelik onaylandı.");
     }
