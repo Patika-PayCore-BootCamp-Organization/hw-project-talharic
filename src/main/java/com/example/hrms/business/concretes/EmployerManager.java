@@ -40,6 +40,7 @@ public class EmployerManager implements EmployerService {
         }
 
         employer.setActivated(false);
+        employer.setConfirmed(false);
         employerDao.save(employer);
         return userActivationService.add(new UserActivation(employer));
     }
