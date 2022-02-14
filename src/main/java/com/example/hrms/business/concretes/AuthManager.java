@@ -11,8 +11,6 @@ import com.example.hrms.entities.concretes.Employer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class AuthManager implements AuthService {
@@ -31,16 +29,8 @@ public class AuthManager implements AuthService {
     @Override
     public Result resgisterCandidate(Candidate candidate, String confirmPassword) {
 
-        if (!checkIfEmailIsValid(candidate.getEmail())) {
-            return new ErrorResult("Lütfen geçerli bir e-posta adresi giriniz.");
-        }
-
         if (!checkIfEmailExists(candidate.getEmail())) {
             return new ErrorResult("Girilen e-posta adresi başka bir hesaba aittir.");
-        }
-
-        if (!checkIfPasswordIsNull(candidate.getPassword())) {
-            return new ErrorResult("Lütfen boş alanları doldurunuz.");
         }
 
         if (!checkIfPasswordsMatch(candidate.getPassword(), confirmPassword)) {
@@ -53,16 +43,8 @@ public class AuthManager implements AuthService {
     @Override
     public Result resgisterEmployer(Employer employer, String confirmPassword) {
 
-        if (!checkIfEmailIsValid(employer.getEmail())) {
-            return new ErrorResult("Lütfen geçerli bir e-posta adresi giriniz.");
-        }
-
         if (!checkIfEmailExists(employer.getEmail())) {
             return new ErrorResult("Girilen e-posta adresi başka bir hesaba aittir.");
-        }
-
-        if (!checkIfPasswordIsNull(employer.getPassword())) {
-            return new ErrorResult("Lütfen boş alanları doldurunuz.");
         }
 
         if (!checkIfPasswordsMatch(employer.getPassword(), confirmPassword)) {
@@ -72,30 +54,11 @@ public class AuthManager implements AuthService {
         return employerService.add(employer);
     }
 
-    private boolean checkIfEmailIsValid(String email) {
-
-        Pattern pattern = Pattern.compile("^(.+)@(.+)$");
-        Matcher matcher = pattern.matcher(email);
-
-        return matcher.matches();
-    }
-
     private boolean checkIfEmailExists(String email) {
 
         boolean result = false;
 
         if (userService.getByEmail(email).getData() == null) {
-            result = true;
-        }
-
-        return result;
-    }
-
-    private boolean checkIfPasswordIsNull(String password) {
-
-        boolean result = false;
-
-        if (password != null) {
             result = true;
         }
 

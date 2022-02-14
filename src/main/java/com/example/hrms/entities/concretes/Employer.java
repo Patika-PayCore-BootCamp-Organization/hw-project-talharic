@@ -15,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "jobPostings"})
 @PrimaryKeyJoinColumn(name = "user_id", referencedColumnName = "id")
 @Table(name = "employers")
 public class Employer extends User {
@@ -34,8 +33,5 @@ public class Employer extends User {
 
     @Column(name = "is_confirmed")
     private boolean isConfirmed;
-
-    @OneToMany(mappedBy = "employer")
-    private List<JobPosting> jobPostings;
 
 }
