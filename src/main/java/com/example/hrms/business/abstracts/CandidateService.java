@@ -7,17 +7,7 @@ import com.example.hrms.entities.concretes.UserActivation;
 
 import java.util.List;
 
-public interface CandidateService {
-
-    Result add(Candidate candidate);
-
-    Result update(Candidate candidate);
-
-    Result delete(Candidate candidate);
-
-    DataResult<List<Candidate>> getAll();
-
-    DataResult<Candidate> getById(int id);
+public interface CandidateService extends BaseEntityService<Candidate> {
 
     DataResult<Candidate> getByIdentityNumber(String identityNumber);
 

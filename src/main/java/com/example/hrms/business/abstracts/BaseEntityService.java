@@ -2,13 +2,19 @@ package com.example.hrms.business.abstracts;
 
 import com.example.hrms.core.utilities.results.DataResult;
 import com.example.hrms.core.utilities.results.Result;
-import com.example.hrms.entities.concretes.JobTitle;
 
 import java.util.List;
 
-public interface JobTitleService extends BaseEntityService<JobTitle>{
+public interface BaseEntityService<T> {
 
-    DataResult<JobTitle> getByTitle(String title);
+    Result add(T t);
+
+    Result update(T t);
+
+    Result delete(T t);
+
+    DataResult<List<T>> getAll();
+
+    DataResult<T> getById(int id);
 
 }
-

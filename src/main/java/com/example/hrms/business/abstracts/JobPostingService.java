@@ -7,17 +7,7 @@ import com.example.hrms.entities.concretes.dtos.JobPostingWithEmployerAndJobTitl
 
 import java.util.List;
 
-public interface JobPostingService {
-
-    Result add(JobPosting jobPosting);
-
-    Result update(JobPosting jobPosting);
-
-    Result delete(JobPosting jobPosting);
-
-    DataResult<List<JobPosting>> getAll();
-
-    DataResult<JobPosting> getById(int id);
+public interface JobPostingService extends BaseEntityService<JobPosting> {
 
     DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetails();
 

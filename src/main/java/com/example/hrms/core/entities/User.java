@@ -1,4 +1,4 @@
-package com.example.hrms.core.utilities.results.entities;
+package com.example.hrms.core.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
