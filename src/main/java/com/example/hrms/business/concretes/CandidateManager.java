@@ -30,7 +30,7 @@ public class CandidateManager implements CandidateService {
     @Override
     public Result add(Candidate candidate) {
 
-        if (!userCheckService.checkIfRealPerson(candidate.getIdentityNumber(), candidate.getFirstName(), candidate.getLastName(), candidate.getDateOfBirth().getYear())) {
+        if (!userCheckService.checkIfRealPerson(candidate.getIdentityNumber(), candidate.getFirstName(), candidate.getLastName(), candidate.getDateOfBirth())) {
             return new ErrorResult("Lütfen bilgilerinizi doğru giriniz.");
         }
 
@@ -69,11 +69,6 @@ public class CandidateManager implements CandidateService {
     }
 
     @Override
-    public DataResult<Candidate> getByIdentityNumber(String identityNumber) {
-        return new SuccessDataResult<Candidate>(candidateDao.getByIdentityNumber(identityNumber));
-    }
-
-    @Override
     public Result activate(String code) {
 
         UserActivation userActivation = userActivationService.getByCode(code).getData();
@@ -90,6 +85,11 @@ public class CandidateManager implements CandidateService {
         update(candidate);
         userActivationService.update(userActivation);
         return new SuccessResult("Üyelik işlemleri tamamlanmıştır.");
+    }
+
+    @Override
+    public DataResult<Candidate> getByIdentityNumber(String identityNumber) {
+        return new SuccessDataResult<Candidate>(candidateDao.getByIdentityNumber(identityNumber));
     }
 
     private boolean checkIfIdentityNumberExists(String identityNumber) {

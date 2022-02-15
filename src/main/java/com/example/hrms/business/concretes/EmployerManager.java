@@ -25,7 +25,7 @@ public class EmployerManager implements EmployerService {
     private CompanyStaffService companyStaffService;
 
     @Autowired
-    public EmployerManager(EmployerDao employerDao,	UserActivationService userActivationService, UserConfirmationService userConfirmationService, CompanyStaffService companyStaffService) {
+    public EmployerManager(EmployerDao employerDao, UserActivationService userActivationService, UserConfirmationService userConfirmationService, CompanyStaffService companyStaffService) {
         this.employerDao = employerDao;
         this.userActivationService = userActivationService;
         this.userConfirmationService = userConfirmationService;
@@ -60,7 +60,6 @@ public class EmployerManager implements EmployerService {
         return new SuccessResult("İş veren silindi.");
     }
 
-
     @Override
     public DataResult<List<Employer>> getAll() {
         return new SuccessDataResult<List<Employer>>(employerDao.findAll());
@@ -69,11 +68,6 @@ public class EmployerManager implements EmployerService {
     @Override
     public DataResult<Employer> getById(int id) {
         return new SuccessDataResult<Employer>(employerDao.getById(id));
-    }
-
-    @Override
-    public DataResult<List<Employer>> getAllByIsActivatedAndIsConfirmed(boolean isActivated, boolean isConfirmed) {
-        return new SuccessDataResult<List<Employer>>(employerDao.getByIsActivatedAndIsConfirmed(isActivated, isConfirmed));
     }
 
     @Override
@@ -98,10 +92,10 @@ public class EmployerManager implements EmployerService {
     @Override
     public Result confirm(Integer employerId, Integer companyStaffId, boolean isConfirmed) {
 
-        Employer employer =  getById(employerId).getData();
+        Employer employer = getById(employerId).getData();
         CompanyStaff companyStaff = companyStaffService.getById(companyStaffId).getData();
 
-        if (isConfirmed == false) {
+        if (!isConfirmed) {
             userActivationService.delete(userActivationService.getByUser(employer).getData());
             delete(employer);
             return new ErrorResult("Üyelik onaylanmadı.");
@@ -112,6 +106,11 @@ public class EmployerManager implements EmployerService {
         update(employer);
         userConfirmationService.add(new UserConfirmation(employer, companyStaff));
         return new SuccessResult("Üyelik onaylandı.");
+    }
+
+    @Override
+    public DataResult<List<Employer>> getAllByIsActivatedAndIsConfirmed(boolean isActivated, boolean isConfirmed) {
+        return new SuccessDataResult<List<Employer>>(employerDao.getByIsActivatedAndIsConfirmed(isActivated, isConfirmed));
     }
 
     private boolean checkIfDomainsMatch(String webAddress, String email) {

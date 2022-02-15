@@ -31,7 +31,7 @@ public class CandidatesController {
     }
 
     @PostMapping("/activate")
-    public Result activate(String code) {
+    public Result activate(@RequestParam String code) {
         return candidateService.activate(code);
     }
 

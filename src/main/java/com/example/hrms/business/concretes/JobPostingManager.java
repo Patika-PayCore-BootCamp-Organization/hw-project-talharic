@@ -58,6 +58,18 @@ public class JobPostingManager implements JobPostingService {
     }
 
     @Override
+    public Result doActiveOrPassive(int id, boolean isActive) {
+
+        String statusMessage = isActive ? "İlan aktifleştirildi." : "İlan pasifleştirildi.";
+
+        JobPosting jobPosting = getById(id).getData();
+        jobPosting.setActive(isActive);
+
+        update(jobPosting);
+        return new SuccessResult(statusMessage);
+    }
+
+    @Override
     public DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetails() {
         return new SuccessDataResult<List<JobPostingWithEmployerAndJobTitleDto>>(jobPostingDao.getJobPostingWithEmployerAndJobTitleDtoByIsActive(true));
     }
@@ -71,26 +83,9 @@ public class JobPostingManager implements JobPostingService {
     }
 
     @Override
-    public DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetailsByCompanyName(String companyName) {
+    public DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetailsByCompanyName(
+            String companyName) {
         return new SuccessDataResult<List<JobPostingWithEmployerAndJobTitleDto>>(jobPostingDao.getJobPostingWithEmployerAndJobTitleDtoByIsActiveAndCompanyName(true, companyName));
-    }
-
-    @Override
-    public Result doActiveOrPassive(int id, boolean isActive) {
-
-        String statusMessage;
-
-        if (isActive) {
-            statusMessage = "İlan aktifleştirildi.";
-        } else {
-            statusMessage = "İlan pasifleştirildi.";
-        }
-
-        JobPosting jobPosting = getById(id).getData();
-        jobPosting.setActive(isActive);
-
-        update(jobPosting);
-        return new SuccessResult(statusMessage);
     }
 
 }

@@ -67,7 +67,6 @@ public class UserActivationManager implements UserActivationService {
         return new SuccessDataResult<UserActivation>(userActivationDao.getByCode(code));
     }
 
-
     @Override
     public DataResult<UserActivation> getByUser(User user) {
         return new SuccessDataResult<UserActivation>(userActivationDao.getByUser(user));

@@ -2,11 +2,13 @@ package com.example.hrms.business.adapters.mernis;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class UserCheckManager implements UserCheckService {
 
     @Override
-    public boolean checkIfRealPerson(String identityNumber, String firstName, String lastName, int yearOfBirth) {
+    public boolean checkIfRealPerson(String identityNumber, String firstName, String lastName, LocalDate dateOfBirth) {
         return true;
     }
 
