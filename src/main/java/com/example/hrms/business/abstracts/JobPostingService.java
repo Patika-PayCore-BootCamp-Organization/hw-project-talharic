@@ -15,4 +15,6 @@ public interface JobPostingService extends BaseEntityService<JobPosting> {
 
     DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetailsByCompanyName(String companyName);
 
+    Result doActiveOrPassive(int id, boolean isActive);
+
 }

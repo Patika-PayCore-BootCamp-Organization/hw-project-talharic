@@ -2,7 +2,7 @@ package com.example.hrms.business.concretes;
 
 import com.example.hrms.business.abstracts.CandidateService;
 import com.example.hrms.business.abstracts.UserActivationService;
-import com.example.hrms.business.adapters.UserCheckService;
+import com.example.hrms.business.adapters.mernis.UserCheckService;
 import com.example.hrms.core.utilities.results.*;
 import com.example.hrms.dataAccess.abstracts.CandidateDao;
 import com.example.hrms.entities.concretes.Candidate;

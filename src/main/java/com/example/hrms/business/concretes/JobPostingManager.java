@@ -11,6 +11,7 @@ import com.example.hrms.entities.concretes.dtos.JobPostingWithEmployerAndJobTitl
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -24,6 +25,9 @@ public class JobPostingManager implements JobPostingService {
 
     @Override
     public Result add(JobPosting jobPosting) {
+
+        jobPosting.setPostingDate(LocalDate.now());
+        jobPosting.setActive(false);
 
         jobPostingDao.save(jobPosting);
         return new SuccessResult("İş ilanı eklendi.");
@@ -61,7 +65,7 @@ public class JobPostingManager implements JobPostingService {
     @Override
     public DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetailsSortedByPostingDate() {
 
-        Sort sort = Sort.by(Sort.Direction.DESC, "postingDate" );
+        Sort sort = Sort.by(Sort.Direction.DESC, "postingDate");
 
         return new SuccessDataResult<List<JobPostingWithEmployerAndJobTitleDto>>(jobPostingDao.getJobPostingWithEmployerAndJobTitleDtoByIsActive(true, sort));
     }
@@ -69,6 +73,24 @@ public class JobPostingManager implements JobPostingService {
     @Override
     public DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetailsByCompanyName(String companyName) {
         return new SuccessDataResult<List<JobPostingWithEmployerAndJobTitleDto>>(jobPostingDao.getJobPostingWithEmployerAndJobTitleDtoByIsActiveAndCompanyName(true, companyName));
+    }
+
+    @Override
+    public Result doActiveOrPassive(int id, boolean isActive) {
+
+        String statusMessage;
+
+        if (isActive) {
+            statusMessage = "İlan aktifleştirildi.";
+        } else {
+            statusMessage = "İlan pasifleştirildi.";
+        }
+
+        JobPosting jobPosting = getById(id).getData();
+        jobPosting.setActive(isActive);
+
+        update(jobPosting);
+        return new SuccessResult(statusMessage);
     }
 
 }

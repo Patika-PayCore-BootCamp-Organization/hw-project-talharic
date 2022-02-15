@@ -26,11 +26,6 @@ public class JobPostingsController {
         return jobPostingService.add(jobPosting);
     }
 
-    @PostMapping("/update")
-    public Result update(@RequestBody JobPosting jobPosting) {
-        return jobPostingService.update(jobPosting);
-    }
-
     @PostMapping("/delete")
     public Result delete(@RequestBody JobPosting jobPosting) {
         return jobPostingService.delete(jobPosting);
@@ -59,6 +54,11 @@ public class JobPostingsController {
     @GetMapping("/getAllActiveJobPostingDetailsByCompanyName")
     public DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetailsByCompanyName(String companyName) {
         return jobPostingService.getAllActiveJobPostingDetailsByCompanyName(companyName);
+    }
+
+    @PostMapping("/doActiveOrPassive")
+    public Result doActiveOrPassive(int id, boolean isActive) {
+        return jobPostingService.doActiveOrPassive(id, isActive);
     }
 
 }

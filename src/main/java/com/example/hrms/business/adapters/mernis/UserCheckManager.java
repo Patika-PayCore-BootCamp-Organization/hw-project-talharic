@@ -1,4 +1,4 @@
-package com.example.hrms.business.adapters;
+package com.example.hrms.business.adapters.mernis;
 
 import org.springframework.stereotype.Service;
 

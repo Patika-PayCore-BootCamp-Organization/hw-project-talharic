@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface BaseEntityService<T> {
 
-    Result add(T t);
+    Result add(T entity);
 
-    Result update(T t);
+    Result update(T entity);
 
-    Result delete(T t);
+    Result delete(T entity);
 
     DataResult<List<T>> getAll();
 
