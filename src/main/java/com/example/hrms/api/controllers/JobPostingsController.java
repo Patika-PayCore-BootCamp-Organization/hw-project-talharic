@@ -4,7 +4,7 @@ import com.example.hrms.business.abstracts.JobPostingService;
 import com.example.hrms.core.utilities.results.DataResult;
 import com.example.hrms.core.utilities.results.Result;
 import com.example.hrms.entities.concretes.JobPosting;
-import com.example.hrms.entities.concretes.dtos.JobPostingWithEmployerAndJobTitleDto;
+import com.example.hrms.entities.dtos.JobPostingWithEmployerAndJobTitleDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

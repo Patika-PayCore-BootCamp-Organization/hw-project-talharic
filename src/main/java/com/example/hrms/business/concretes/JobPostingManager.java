@@ -7,7 +7,7 @@ import com.example.hrms.core.utilities.results.SuccessDataResult;
 import com.example.hrms.core.utilities.results.SuccessResult;
 import com.example.hrms.dataAccess.abstracts.JobPostingDao;
 import com.example.hrms.entities.concretes.JobPosting;
-import com.example.hrms.entities.concretes.dtos.JobPostingWithEmployerAndJobTitleDto;
+import com.example.hrms.entities.dtos.JobPostingWithEmployerAndJobTitleDto;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.example.hrms.entities.concretes.dtos;
+package com.example.hrms.entities.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

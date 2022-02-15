@@ -3,7 +3,7 @@ package com.example.hrms.business.abstracts;
 import com.example.hrms.core.utilities.results.DataResult;
 import com.example.hrms.core.utilities.results.Result;
 import com.example.hrms.entities.concretes.JobPosting;
-import com.example.hrms.entities.concretes.dtos.JobPostingWithEmployerAndJobTitleDto;
+import com.example.hrms.entities.dtos.JobPostingWithEmployerAndJobTitleDto;
 
 import java.util.List;
 
