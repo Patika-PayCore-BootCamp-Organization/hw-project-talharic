@@ -7,4 +7,6 @@ public interface CloudStorageService {
 
     DataResult<?> upload(MultipartFile multipartFile);
 
+    DataResult<?> delete(String publicIdOfImage);
+
 }

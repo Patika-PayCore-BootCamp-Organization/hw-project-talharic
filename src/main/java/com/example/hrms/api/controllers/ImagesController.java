@@ -21,6 +21,11 @@ public class ImagesController {
         this.imageService = imageService;
     }
 
+    @PostMapping("/delete")
+    public Result delete(@RequestBody Image image) {
+        return imageService.delete(image);
+    }
+
     @GetMapping("/getAll")
     public DataResult<List<Image>> getAll() {
         return imageService.getAll();
