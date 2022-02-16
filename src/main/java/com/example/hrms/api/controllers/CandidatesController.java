@@ -21,6 +21,11 @@ public class CandidatesController {
         this.candidateService = candidateService;
     }
 
+    @PostMapping("/update")
+    public Result update(@RequestBody Candidate candidate) {
+        return candidateService.update(candidate);
+    }
+
     @GetMapping("/getAll")
     public DataResult<List<Candidate>> getAll() {
         return candidateService.getAll();
@@ -34,6 +39,11 @@ public class CandidatesController {
     @PostMapping("/activate")
     public Result activate(@RequestParam String code) {
         return candidateService.activate(code);
+    }
+
+    @GetMapping("/getAllByIsActivated")
+    public DataResult<List<Candidate>> getAllByIsActivated(@RequestParam boolean isActivated) {
+        return candidateService.getAllByIsActivated(isActivated);
     }
 
 }

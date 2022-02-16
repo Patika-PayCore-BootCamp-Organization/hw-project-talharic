@@ -11,6 +11,8 @@ public interface CandidateService extends BaseEntityService<Candidate> {
 
     Result activate(String code);
 
+    DataResult<List<Candidate>> getAllByIsActivated(boolean isActivated);
+
     DataResult<Candidate> getByIdentityNumber(String identityNumber);
 
 }
