@@ -1,6 +1,5 @@
 package com.example.hrms.entities.concretes;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -10,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -34,7 +32,7 @@ public class UserConfirmation {
     @Column(name = "is_confirmed_date")
     private LocalDateTime isConfirmedDate;
 
-    @OneToOne()
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
 

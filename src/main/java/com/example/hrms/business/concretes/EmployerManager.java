@@ -1,15 +1,9 @@
 package com.example.hrms.business.concretes;
 
-import com.example.hrms.business.abstracts.CompanyStaffService;
-import com.example.hrms.business.abstracts.EmployerService;
-import com.example.hrms.business.abstracts.UserActivationService;
-import com.example.hrms.business.abstracts.UserConfirmationService;
+import com.example.hrms.business.abstracts.*;
 import com.example.hrms.core.utilities.results.*;
 import com.example.hrms.dataAccess.abstracts.EmployerDao;
-import com.example.hrms.entities.concretes.CompanyStaff;
-import com.example.hrms.entities.concretes.Employer;
-import com.example.hrms.entities.concretes.UserActivation;
-import com.example.hrms.entities.concretes.UserConfirmation;
+import com.example.hrms.entities.concretes.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,24 +14,27 @@ import java.util.List;
 public class EmployerManager implements EmployerService {
 
     private EmployerDao employerDao;
+    private UserService userService;
     private UserActivationService userActivationService;
     private UserConfirmationService userConfirmationService;
     private CompanyStaffService companyStaffService;
+    private UpdatedEmployerService updatedEmployerService;
 
     @Autowired
-    public EmployerManager(EmployerDao employerDao, UserActivationService userActivationService, UserConfirmationService userConfirmationService, CompanyStaffService companyStaffService) {
+    public EmployerManager(EmployerDao employerDao, UserService userService, UserActivationService userActivationService,
+                           UserConfirmationService userConfirmationService, CompanyStaffService companyStaffService, UpdatedEmployerService updatedEmployerService) {
         this.employerDao = employerDao;
+        this.userService = userService;
         this.userActivationService = userActivationService;
         this.userConfirmationService = userConfirmationService;
         this.companyStaffService = companyStaffService;
+        this.updatedEmployerService = updatedEmployerService;
     }
 
     @Override
     public Result add(Employer employer) {
 
-        if (!checkIfDomainsMatch(employer.getWebAddress(), employer.getEmail())) {
-            return new ErrorResult("Web adresi ile e-posta aynı alan adına sahip olmalıdır.");
-        }
+        validateEmployer(employer);
 
         employer.setActivated(false);
         employer.setConfirmed(false);
@@ -49,15 +46,30 @@ public class EmployerManager implements EmployerService {
     @Override
     public Result update(Employer employer) {
 
-        employerDao.save(employer);
-        return new SuccessResult("İş veren güncellendi.");
+        validateEmployer(employer);
+
+        Employer employerInConfirmationProcess = getById(employer.getId()).getData();
+        employerInConfirmationProcess.setConfirmed(false);
+
+        UpdatedEmployer updatedEmployer = new UpdatedEmployer(
+                0,
+                employer.getEmail(),
+                employer.getPassword(),
+                employer.getCompanyName(),
+                employer.getWebAddress(),
+                employer.getPhoneNumber(),
+                employer
+        );
+
+        updatedEmployerService.add(updatedEmployer);
+        return new SuccessResult("İşveren güncellemesi onay aşamasındadır.");
     }
 
     @Override
     public Result delete(Employer employer) {
 
         employerDao.delete(employer);
-        return new SuccessResult("İş veren silindi.");
+        return new SuccessResult("İşveren silindi.");
     }
 
     @Override
@@ -84,7 +96,7 @@ public class EmployerManager implements EmployerService {
         employer.setActivated(true);
         userActivation.setIsActivatedDate(LocalDateTime.now());
 
-        update(employer);
+        employerDao.save(employer);
         userActivationService.update(userActivation);
         return new SuccessResult("Üyeliğiniz onay aşamasındadır.");
     }
@@ -94,18 +106,38 @@ public class EmployerManager implements EmployerService {
 
         Employer employer = getById(employerId).getData();
         CompanyStaff companyStaff = companyStaffService.getById(companyStaffId).getData();
+        UpdatedEmployer updatedEmployer = updatedEmployerService.getByEmployerId(employerId).getData();
 
-        if (!isConfirmed) {
+        int numberOfUserConfirmations = userConfirmationService.getAllByUserId(employerId).getData().size();
+
+        if (!isConfirmed && numberOfUserConfirmations == 0) {
             userActivationService.delete(userActivationService.getByUser(employer).getData());
             delete(employer);
-            return new ErrorResult("Üyelik onaylanmadı.");
+            return new ErrorResult("İşveren onaylanmadı.");
         }
 
+        if (isConfirmed && numberOfUserConfirmations == 0) {
+            employer.setConfirmed(isConfirmed);
+            employerDao.save(employer);
+            userConfirmationService.add(new UserConfirmation(employer, companyStaff));
+            return new SuccessResult("İşveren onaylandı.");
+        }
+
+        if (!isConfirmed && numberOfUserConfirmations > 0) {
+            return new ErrorResult("İşveren onaylanmadı.");
+        }
+
+        employer.setEmail(updatedEmployer.getEmail());
+        employer.setPassword(updatedEmployer.getPassword());
+        employer.setCompanyName(updatedEmployer.getCompanyName());
+        employer.setWebAddress(updatedEmployer.getWebAddress());
+        employer.setPhoneNumber(updatedEmployer.getCompanyName());
         employer.setConfirmed(isConfirmed);
 
-        update(employer);
+        employerDao.save(employer);
+        updatedEmployerService.delete(updatedEmployer);
         userConfirmationService.add(new UserConfirmation(employer, companyStaff));
-        return new SuccessResult("Üyelik onaylandı.");
+        return new SuccessResult("İşveren onaylandı.");
     }
 
     @Override
@@ -113,11 +145,35 @@ public class EmployerManager implements EmployerService {
         return new SuccessDataResult<List<Employer>>(employerDao.getByIsActivatedAndIsConfirmed(isActivated, isConfirmed));
     }
 
+    private boolean checkIfEmailExists(String email) {
+
+        boolean result = false;
+
+        if (userService.getByEmail(email).getData() == null) {
+            result = true;
+        }
+
+        return result;
+    }
+
     private boolean checkIfDomainsMatch(String webAddress, String email) {
 
         String[] splitEmailArray = email.split("@");
 
         return webAddress.contains(splitEmailArray[1]);
+    }
+
+    private Result validateEmployer(Employer employer) {
+
+        if (!checkIfEmailExists(employer.getEmail())) {
+            return new ErrorResult("Girilen e-posta adresi başka bir hesaba aittir.");
+        }
+
+        if (!checkIfDomainsMatch(employer.getWebAddress(), employer.getEmail())) {
+            return new ErrorResult("Web adresi ile e-posta aynı alan adına sahip olmalıdır.");
+        }
+
+        return null;
     }
 
 }

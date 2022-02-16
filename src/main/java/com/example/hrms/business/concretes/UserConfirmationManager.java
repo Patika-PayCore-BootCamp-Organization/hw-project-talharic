@@ -8,7 +8,6 @@ import com.example.hrms.entities.concretes.UserConfirmation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -56,6 +55,11 @@ public class UserConfirmationManager implements UserConfirmationService {
     @Override
     public DataResult<UserConfirmation> getById(int id) {
         return new SuccessDataResult<UserConfirmation>(userConfirmationDao.getById(id));
+    }
+
+    @Override
+    public DataResult<List<UserConfirmation>> getAllByUserId(int userId) {
+        return new SuccessDataResult<List<UserConfirmation>>(userConfirmationDao.getByUser_Id(userId));
     }
 
 }
