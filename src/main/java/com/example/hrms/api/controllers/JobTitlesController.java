@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/jobTitles")
+@CrossOrigin
 public class JobTitlesController {
 
     private JobTitleService jobTitleService;
