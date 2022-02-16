@@ -13,7 +13,7 @@ import com.example.hrms.entities.concretes.UserConfirmation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -82,7 +82,7 @@ public class EmployerManager implements EmployerService {
         Employer employer = getById(userActivation.getUser().getId()).getData();
 
         employer.setActivated(true);
-        userActivation.setIsActivatedDate(LocalDate.now());
+        userActivation.setIsActivatedDate(LocalDateTime.now());
 
         update(employer);
         userActivationService.update(userActivation);
@@ -90,7 +90,7 @@ public class EmployerManager implements EmployerService {
     }
 
     @Override
-    public Result confirm(Integer employerId, Integer companyStaffId, boolean isConfirmed) {
+    public Result confirm(int employerId, int companyStaffId, boolean isConfirmed) {
 
         Employer employer = getById(employerId).getData();
         CompanyStaff companyStaff = companyStaffService.getById(companyStaffId).getData();

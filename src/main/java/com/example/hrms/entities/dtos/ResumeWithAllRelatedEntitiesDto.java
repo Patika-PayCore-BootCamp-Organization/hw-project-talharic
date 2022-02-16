@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -15,7 +16,7 @@ public class ResumeWithAllRelatedEntitiesDto {
 
     private int id;
 
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 
     private Candidate candidate;
 

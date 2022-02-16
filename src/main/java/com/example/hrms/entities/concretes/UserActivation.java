@@ -1,6 +1,7 @@
 package com.example.hrms.entities.concretes;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Table(name = "user_activations")
-public class UserActivation{
+public class UserActivation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,13 +34,13 @@ public class UserActivation{
     private String code;
 
     @Column(name = "is_activated_date")
-    private LocalDate isActivatedDate;
+    private LocalDateTime isActivatedDate;
 
     @OneToOne()
     @JoinColumn(name = "user_id")
     private User user;
 
-    public UserActivation(User user){
+    public UserActivation(User user) {
         this.setUser(user);
     }
 

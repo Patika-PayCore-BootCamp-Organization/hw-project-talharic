@@ -11,7 +11,7 @@ import com.example.hrms.entities.dtos.ResumeWithAllRelatedEntitiesDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -35,7 +35,7 @@ public class ResumeManager implements ResumeService {
     @Override
     public Result add(Resume resume) {
 
-        resume.setCreationDate(LocalDate.now());
+        resume.setCreationDate(LocalDateTime.now());
 
         resumeDao.save(resume);
         return new SuccessResult("Özgeçmiş eklendi.");

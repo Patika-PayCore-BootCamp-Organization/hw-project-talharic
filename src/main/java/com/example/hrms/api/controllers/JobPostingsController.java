@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/jobPostings")
+@CrossOrigin
 public class JobPostingsController {
 
     private JobPostingService jobPostingService;
@@ -41,6 +42,11 @@ public class JobPostingsController {
         return jobPostingService.getById(id);
     }
 
+    @PostMapping("/confirm")
+    public Result confirm(@RequestParam int jobPostingId, @RequestParam int companyStaffId, @RequestParam boolean isConfirmed) {
+        return jobPostingService.confirm(jobPostingId, companyStaffId, isConfirmed);
+    }
+
     @PostMapping("/doActiveOrPassive")
     public Result doActiveOrPassive(@RequestParam int id, @RequestParam boolean isActive) {
         return jobPostingService.doActiveOrPassive(id, isActive);
@@ -54,6 +60,11 @@ public class JobPostingsController {
     @GetMapping("/getAllActiveJobPostingDetailsSortedByPostingDate")
     public DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetailsSortedByPostingDate() {
         return jobPostingService.getAllActiveJobPostingDetailsSortedByPostingDate();
+    }
+
+    @GetMapping("/getAllActiveJobPostingDetailsSortedByPostingDateTop6")
+    public DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetailsSortedByPostingDateTop6() {
+        return jobPostingService.getAllActiveJobPostingDetailsSortedByPostingDateTop6();
     }
 
     @GetMapping("/getAllActiveJobPostingDetailsByCompanyName")

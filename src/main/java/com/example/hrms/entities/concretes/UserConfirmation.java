@@ -1,6 +1,7 @@
 package com.example.hrms.entities.concretes;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,7 +32,7 @@ public class UserConfirmation {
     private int id;
 
     @Column(name = "is_confirmed_date")
-    private LocalDate isConfirmedDate;
+    private LocalDateTime isConfirmedDate;
 
     @OneToOne()
     @JoinColumn(name = "user_id")
@@ -41,7 +42,7 @@ public class UserConfirmation {
     @JoinColumn(name = "company_staff_id")
     private CompanyStaff companyStaff;
 
-    public UserConfirmation(User user, CompanyStaff companyStaff){
+    public UserConfirmation(User user, CompanyStaff companyStaff) {
         this.setUser(user);
         this.setCompanyStaff(companyStaff);
     }

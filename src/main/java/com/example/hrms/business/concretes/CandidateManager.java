@@ -10,7 +10,7 @@ import com.example.hrms.entities.concretes.UserActivation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -80,7 +80,7 @@ public class CandidateManager implements CandidateService {
         Candidate candidate = getById(userActivation.getUser().getId()).getData();
 
         candidate.setActivated(true);
-        userActivation.setIsActivatedDate(LocalDate.now());
+        userActivation.setIsActivatedDate(LocalDateTime.now());
 
         update(candidate);
         userActivationService.update(userActivation);

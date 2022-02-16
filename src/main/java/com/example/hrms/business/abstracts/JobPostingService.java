@@ -9,11 +9,15 @@ import java.util.List;
 
 public interface JobPostingService extends BaseEntityService<JobPosting> {
 
+    Result confirm(int employerId, int companyStaffId, boolean isConfirmed);
+
     Result doActiveOrPassive(int id, boolean isActive);
 
     DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetails();
 
     DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetailsSortedByPostingDate();
+
+    DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetailsSortedByPostingDateTop6();
 
     DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetailsByCompanyName(String companyName);
 
