@@ -1,12 +1,14 @@
 package com.example.hrms.business.concretes;
 
 import com.example.hrms.business.abstracts.CandidateService;
+import com.example.hrms.business.abstracts.ResumeService;
 import com.example.hrms.business.abstracts.UserActivationService;
 import com.example.hrms.business.abstracts.UserService;
 import com.example.hrms.business.adapters.mernis.UserCheckService;
 import com.example.hrms.core.utilities.results.*;
 import com.example.hrms.dataAccess.abstracts.CandidateDao;
 import com.example.hrms.entities.concretes.Candidate;
+import com.example.hrms.entities.concretes.Resume;
 import com.example.hrms.entities.concretes.UserActivation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,13 +20,15 @@ import java.util.List;
 public class CandidateManager implements CandidateService {
 
     private CandidateDao candidateDao;
+    private ResumeService resumeService;
     private UserService userService;
     private UserCheckService userCheckService;
     private UserActivationService userActivationService;
 
     @Autowired
-    public CandidateManager(CandidateDao candidateDao, UserService userService, UserCheckService userCheckService, UserActivationService userActivationService) {
+    public CandidateManager(CandidateDao candidateDao, ResumeService resumeService, UserService userService, UserCheckService userCheckService, UserActivationService userActivationService) {
         this.candidateDao = candidateDao;
+        this.resumeService = resumeService;
         this.userService = userService;
         this.userCheckService = userCheckService;
         this.userActivationService = userActivationService;
@@ -38,6 +42,7 @@ public class CandidateManager implements CandidateService {
         candidate.setActivated(false);
 
         candidateDao.save(candidate);
+        resumeService.add(new Resume(candidate));
         return userActivationService.add(new UserActivation(candidate));
     }
 
