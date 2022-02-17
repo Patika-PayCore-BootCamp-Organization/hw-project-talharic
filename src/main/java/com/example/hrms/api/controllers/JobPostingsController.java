@@ -4,7 +4,6 @@ import com.example.hrms.business.abstracts.JobPostingService;
 import com.example.hrms.core.utilities.results.DataResult;
 import com.example.hrms.core.utilities.results.Result;
 import com.example.hrms.entities.concretes.JobPosting;
-import com.example.hrms.entities.dtos.JobPostingWithEmployerAndJobTitleDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,11 +26,6 @@ public class JobPostingsController {
         return jobPostingService.add(jobPosting);
     }
 
-    @PostMapping("/delete")
-    public Result delete(@RequestBody JobPosting jobPosting) {
-        return jobPostingService.delete(jobPosting);
-    }
-
     @GetMapping("/getAll")
     public DataResult<List<JobPosting>> getAll() {
         return jobPostingService.getAll();
@@ -43,33 +37,55 @@ public class JobPostingsController {
     }
 
     @PostMapping("/confirm")
-    public Result confirm(@RequestParam int jobPostingId, @RequestParam int companyStaffId, @RequestParam boolean isConfirmed) {
+    public Result confirm(@RequestParam int jobPostingId, @RequestParam int companyStaffId,	@RequestParam boolean isConfirmed) {
         return jobPostingService.confirm(jobPostingId, companyStaffId, isConfirmed);
     }
 
-    @PostMapping("/doActiveOrPassive")
-    public Result doActiveOrPassive(@RequestParam int id, @RequestParam boolean isActive) {
-        return jobPostingService.doActiveOrPassive(id, isActive);
+    @PostMapping("/makeActiveOrPassive")
+    public Result makeActiveOrPassive(@RequestParam int id, @RequestParam boolean isActive) {
+        return jobPostingService.makeActiveOrPassive(id, isActive);
     }
 
-    @GetMapping("/getAllActiveJobPostingDetails")
-    public DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetails() {
-        return jobPostingService.getAllActiveJobPostingDetails();
+    @GetMapping("/getAllActiveOnes")
+    public DataResult<List<JobPosting>> getAllActiveOnes() {
+        return jobPostingService.getAllActiveOnes();
     }
 
-    @GetMapping("/getAllActiveJobPostingDetailsSortedByPostingDate")
-    public DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetailsSortedByPostingDate() {
-        return jobPostingService.getAllActiveJobPostingDetailsSortedByPostingDate();
+    @GetMapping("/getAllActiveOnesByPage")
+    public DataResult<List<JobPosting>> getAllActiveOnesByPage(@RequestParam int pageNo, @RequestParam int pageSize) {
+        return jobPostingService.getAllActiveOnesByPage(pageNo, pageSize);
     }
 
-    @GetMapping("/getAllActiveJobPostingDetailsSortedByPostingDateTop6")
-    public DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetailsSortedByPostingDateTop6() {
-        return jobPostingService.getAllActiveJobPostingDetailsSortedByPostingDateTop6();
+    @GetMapping("/getAllActiveOnesSortedByPostingDate")
+    public DataResult<List<JobPosting>> getAllActiveOnesSortedByPostingDate() {
+        return jobPostingService.getAllActiveOnesSortedByPostingDate();
     }
 
-    @GetMapping("/getAllActiveJobPostingDetailsByCompanyName")
-    public DataResult<List<JobPostingWithEmployerAndJobTitleDto>> getAllActiveJobPostingDetailsByCompanyName(@RequestParam String companyName) {
-        return jobPostingService.getAllActiveJobPostingDetailsByCompanyName(companyName);
+    @GetMapping("/getAllActiveOnesByPageSortedByPostingDate")
+    public DataResult<List<JobPosting>> getAllActiveOnesByPageSortedByPostingDate(@RequestParam int pageNo,	@RequestParam int pageSize) {
+        return jobPostingService.getAllActiveOnesByPageSortedByPostingDate(pageNo, pageSize);
+    }
+
+    @GetMapping("/getAllActiveOnesSortedByPostingDateTop6")
+    public DataResult<List<JobPosting>> getAllActiveOnesSortedByPostingDateTop6() {
+        return jobPostingService.getAllActiveOnesSortedByPostingDateTop6();
+    }
+
+    @GetMapping("/getAllActiveOnesByEmployerId")
+    public DataResult<List<JobPosting>> getAllActiveOnesByEmployerId(@RequestParam int employerId) {
+        return jobPostingService.getAllActiveOnesByEmployerId(employerId);
+    }
+
+    @GetMapping("/getAllActiveOnesFilteredByCityAndJobTitleAndWorkingTimeAndWorkingType")
+    public DataResult<List<JobPosting>> getAllActiveOnesFilteredByWorkingTimeAndWorkingTypeAndCityAndJobTitle(@RequestParam int cityId, @RequestParam int jobTitleId,
+                                                                                                              @RequestParam int workingTimeId, @RequestParam int workingTypeId) {
+        return jobPostingService.getAllActiveOnesFilteredByCityAndJobTitleAndWorkingTimeAndWorkingType(cityId, jobTitleId, workingTimeId, workingTypeId);
+    }
+
+    @GetMapping("/getAllActiveOnesByPageFilteredByCityAndJobTitleAndWorkingTimeAndWorkingType")
+    public DataResult<List<JobPosting>> getAllActiveOnesByPageFilteredByCityAndJobTitleAndWorkingTimeAndWorkingType(@RequestParam int cityId, @RequestParam int jobTitleId,
+                                                                                                                    @RequestParam int workingTimeId, @RequestParam int workingTypeId, @RequestParam int pageNo, @RequestParam int pageSize) {
+        return jobPostingService.getAllActiveOnesByPageFilteredByCityAndJobTitleAndWorkingTimeAndWorkingType(cityId, jobTitleId, workingTimeId, workingTypeId, pageNo, pageSize);
     }
 
 }

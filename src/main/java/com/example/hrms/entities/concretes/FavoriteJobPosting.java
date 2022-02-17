@@ -13,28 +13,23 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-@Table(name = "job_posting_confirmations")
-public class JobPostingConfirmation {
+@Table(name = "favorite_job_postings")
+public class FavoriteJobPosting {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
-    @Column(name = "is_confirmed_date")
-    private LocalDateTime isConfirmedDate;
+    @Column(name = "date_of_add_to_favorites")
+    private LocalDateTime dateOfAddToFavorites;
 
-    @OneToOne()
+    @ManyToOne()
     @JoinColumn(name = "job_posting_id")
     private JobPosting jobPosting;
 
     @ManyToOne()
-    @JoinColumn(name = "company_staff_id")
-    private CompanyStaff companyStaff;
-
-    public JobPostingConfirmation(JobPosting jobPosting, CompanyStaff companyStaff) {
-        this.setJobPosting(jobPosting);
-        this.setCompanyStaff(companyStaff);
-    }
+    @JoinColumn(name = "candidate_id")
+    private Candidate candidate;
 
 }

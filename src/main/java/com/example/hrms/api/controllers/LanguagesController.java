@@ -1,8 +1,10 @@
 package com.example.hrms.api.controllers;
 
+import com.example.hrms.business.abstracts.JobTitleService;
 import com.example.hrms.business.abstracts.LanguageService;
 import com.example.hrms.core.utilities.results.DataResult;
 import com.example.hrms.core.utilities.results.Result;
+import com.example.hrms.entities.concretes.JobTitle;
 import com.example.hrms.entities.concretes.Language;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,11 +31,6 @@ public class LanguagesController {
     @PostMapping("/update")
     public Result update(@RequestBody Language language) {
         return languageService.update(language);
-    }
-
-    @PostMapping("/delete")
-    public Result delete(@RequestBody Language language) {
-        return languageService.delete(language);
     }
 
     @GetMapping("/getAll")

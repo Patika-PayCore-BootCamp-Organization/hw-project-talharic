@@ -59,11 +59,11 @@ public class JobPosting {
     private City city;
 
     @ManyToOne()
-    @JoinColumn(name = "working_type_id")
-    private WorkingType workingType;
-
-    @ManyToOne()
     @JoinColumn(name = "working_time_id")
     private WorkingTime workingTime;
+
+    @ManyToOne()
+    @JoinColumn(name = "working_type_id")
+    private WorkingType workingType;
 
 }
