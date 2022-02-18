@@ -2,7 +2,6 @@ package com.example.hrms.api.controllers;
 
 import com.example.hrms.business.abstracts.UserActivationService;
 import com.example.hrms.core.utilities.results.DataResult;
-import com.example.hrms.core.utilities.results.Result;
 import com.example.hrms.entities.concretes.UserActivation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +28,11 @@ public class UserActivationsController {
     @GetMapping("/getById")
     public DataResult<UserActivation> getById(@RequestParam int id) {
         return userActivationService.getById(id);
+    }
+
+    @GetMapping("/getByUserId")
+    public DataResult<UserActivation> getByUserId(@RequestParam int userId) {
+        return userActivationService.getByUserId(userId);
     }
 
 }

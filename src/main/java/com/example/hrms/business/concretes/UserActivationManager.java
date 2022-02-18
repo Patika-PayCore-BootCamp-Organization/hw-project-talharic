@@ -68,8 +68,8 @@ public class UserActivationManager implements UserActivationService {
     }
 
     @Override
-    public DataResult<UserActivation> getByUser(User user) {
-        return new SuccessDataResult<UserActivation>(userActivationDao.getByUser(user));
+    public DataResult<UserActivation> getByUserId(int userId) {
+        return new SuccessDataResult<UserActivation>(userActivationDao.getByUser_Id(userId));
     }
 
     private String generateCode() {
