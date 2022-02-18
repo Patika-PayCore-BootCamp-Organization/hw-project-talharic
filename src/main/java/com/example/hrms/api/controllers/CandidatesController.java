@@ -21,7 +21,7 @@ public class CandidatesController {
         this.candidateService = candidateService;
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public Result update(@RequestBody Candidate candidate) {
         return candidateService.update(candidate);
     }
@@ -36,7 +36,7 @@ public class CandidatesController {
         return candidateService.getById(id);
     }
 
-    @PostMapping("/activate")
+    @PutMapping("/activate")
     public Result activate(@RequestParam String code) {
         return candidateService.activate(code);
     }

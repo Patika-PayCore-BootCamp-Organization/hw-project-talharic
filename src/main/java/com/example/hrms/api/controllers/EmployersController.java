@@ -21,7 +21,7 @@ public class EmployersController {
         this.employerService = employerService;
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public Result update(@RequestBody Employer employer) {
         return employerService.update(employer);
     }
@@ -36,12 +36,12 @@ public class EmployersController {
         return employerService.getById(id);
     }
 
-    @PostMapping("/activate")
+    @PutMapping("/activate")
     public Result activate(@RequestParam String code) {
         return employerService.activate(code);
     }
 
-    @PostMapping("/confirm")
+    @PutMapping("/confirm")
     public Result confirm(@RequestParam int employerId, @RequestParam int companyStaffId, @RequestParam boolean isConfirmed) {
         return employerService.confirm(employerId, companyStaffId, isConfirmed);
     }

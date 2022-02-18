@@ -26,12 +26,12 @@ public class CoverLettersController {
         return coverLetterService.add(coverLetter);
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public Result update(@RequestBody CoverLetter coverLetter) {
         return coverLetterService.update(coverLetter);
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public Result delete(@RequestBody CoverLetter coverLetter) {
         return coverLetterService.delete(coverLetter);
     }
