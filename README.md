@@ -1,5 +1,15 @@
 # Human Resource Management System
 
+## Kullanılan Dependency'ler
+- Spring Web
+- Spring Data JPA
+- H2 Database
+- Validation
+- Lombok
+- Swagger
+- RabbitMQ
+- PostgreSQL
+
 ## Swagger UI
 
-![hrmsSwaggerUi](https://r.resimlink.com/4PZ9.png)
+![hrmsSwaggerUi](https://i.hizliresim.com/9ch4iv7.png)

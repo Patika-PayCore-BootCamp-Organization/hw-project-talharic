@@ -9,6 +9,7 @@ import com.example.hrms.dataAccess.abstracts.ResumeDao;
 import com.example.hrms.entities.concretes.Resume;
 import com.example.hrms.entities.dtos.ResumeWithAllRelatedEntitiesDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -61,7 +62,10 @@ public class ResumeManager implements ResumeService {
 
     @Override
     public DataResult<List<Resume>> getAll() {
-        return new SuccessDataResult<List<Resume>>(resumeDao.findAll());
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "creationDate");
+
+        return new SuccessDataResult<List<Resume>>(resumeDao.findAll(sort));
     }
 
     @Override
