@@ -4,6 +4,7 @@ import com.example.hrms.business.abstracts.AuthService;
 import com.example.hrms.core.utilities.results.ErrorDataResult;
 import com.example.hrms.core.utilities.results.Result;
 import com.example.hrms.entities.concretes.Candidate;
+import com.example.hrms.entities.concretes.CompanyStaff;
 import com.example.hrms.entities.concretes.Employer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,11 @@ public class AuthController {
     @Autowired
     public AuthController(AuthService authService) {
         this.authService = authService;
+    }
+
+    @PostMapping("/registerCompanyStaff")
+    public ResponseEntity<?> registerCompanyStaff(@Valid @RequestBody CompanyStaff companyStaff, String confirmPassword) {
+        return ResponseEntity.ok(authService.resgisterCompanyStaff(companyStaff, confirmPassword));
     }
 
     @PostMapping("/registerCandidate")
