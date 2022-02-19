@@ -10,6 +10,7 @@ import com.example.hrms.entities.concretes.CompanyStaff;
 import com.example.hrms.entities.concretes.JobPosting;
 import com.example.hrms.entities.concretes.JobPostingConfirmation;
 import com.example.hrms.entities.concretes.JobPostingConfirmationType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,6 +31,7 @@ public class JobPostingManager implements JobPostingService {
     private JobPostingConfirmationTypeService jobPostingConfirmationTypeService;
     private CompanyStaffService companyStaffService;
 
+    @Autowired
     public JobPostingManager(JobPostingDao jobPostingDao, JobPostingConfirmationService jobPostingConfirmationService, JobPostingConfirmationTypeService jobPostingConfirmationTypeService, CompanyStaffService companyStaffService) {
         this.jobPostingDao = jobPostingDao;
         this.jobPostingConfirmationService = jobPostingConfirmationService;
@@ -93,7 +95,9 @@ public class JobPostingManager implements JobPostingService {
     @Override
     public Result makeActiveOrPassive(int id, boolean isActive) {
 
-        String statusMessage = isActive ? "İlan aktifleştirildi." : "İlan pasifleştirildi.";
+        String statusMessage = isActive
+                ? "İlan aktifleştirildi."
+                : "İlan pasifleştirildi.";
 
         JobPosting jobPosting = getById(id).getData();
         jobPosting.setActive(isActive);
@@ -140,8 +144,11 @@ public class JobPostingManager implements JobPostingService {
     }
 
     @Override
-    public DataResult<List<JobPosting>> getAllActiveOnesByEmployerId(int employerId) {
-        return new SuccessDataResult<List<JobPosting>>(jobPostingDao.getByIsActiveAndEmployer_Id(true, employerId));
+    public DataResult<List<JobPosting>> getAllActiveOnesByEmployerIdSortedByPostingDate(int employerId) {
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "postingDate");
+
+        return new SuccessDataResult<List<JobPosting>>(jobPostingDao.getByIsActiveAndEmployer_Id(true, employerId, sort));
     }
 
     @Override
@@ -164,48 +171,24 @@ public class JobPostingManager implements JobPostingService {
 
     private List<JobPosting> getAllActiveOnesFilteredByCityAndJobTitleAndWorkingTimeAndWorkingTypeBase(int cityId, int jobTitleId, int workingTimeId, int workingTypeId) {
 
-        Stream<JobPosting> stream = getAllActiveOnesSortedByPostingDate().getData().stream();
-
-        Predicate<JobPosting> workingTimeCondition = jobPosting -> jobPosting.getWorkingTime().getId() == workingTimeId;
-        Predicate<JobPosting> workingTypeCondition = jobPosting -> jobPosting.getWorkingType().getId() == workingTypeId;
-        Predicate<JobPosting> cityCondition = jobPosting -> jobPosting.getCity().getId() == cityId;
-        Predicate<JobPosting> jobTitleCondition = jobPosting -> jobPosting.getJobTitle().getId() == jobTitleId;
-
         List<JobPosting> result = new ArrayList<JobPosting>();
 
-        if (workingTimeId == 0 && workingTypeId != 0 && cityId != 0 && jobTitleId != 0) {
-            stream.filter(workingTypeCondition).filter(cityCondition).filter(jobTitleCondition).forEach(jobPosting -> result.add(jobPosting));
-        } else if (workingTimeId != 0 && workingTypeId == 0 && cityId != 0 && jobTitleId != 0) {
-            stream.filter(workingTimeCondition).filter(cityCondition).filter(jobTitleCondition).forEach(jobPosting -> result.add(jobPosting));
-        } else if (workingTimeId != 0 && workingTypeId != 0 && cityId == 0 && jobTitleId != 0) {
-            stream.filter(workingTimeCondition).filter(workingTypeCondition).filter(jobTitleCondition).forEach(jobPosting -> result.add(jobPosting));
-        } else if (workingTimeId != 0 && workingTypeId != 0 && cityId != 0 && jobTitleId == 0) {
-            stream.filter(workingTimeCondition).filter(workingTypeCondition).filter(cityCondition).forEach(jobPosting -> result.add(jobPosting));
-        } else if (workingTimeId == 0 && workingTypeId == 0 && cityId != 0 && jobTitleId != 0) {
-            stream.filter(cityCondition).filter(jobTitleCondition).forEach(jobPosting -> result.add(jobPosting));
-        } else if (workingTimeId == 0 && workingTypeId != 0 && cityId == 0 && jobTitleId != 0) {
-            stream.filter(workingTypeCondition).filter(jobTitleCondition).forEach(jobPosting -> result.add(jobPosting));
-        } else if (workingTimeId == 0 && workingTypeId != 0 && cityId != 0 && jobTitleId == 0) {
-            stream.filter(workingTypeCondition).filter(cityCondition).forEach(jobPosting -> result.add(jobPosting));
-        } else if (workingTimeId != 0 && workingTypeId == 0 && cityId == 0 && jobTitleId != 0) {
-            stream.filter(workingTimeCondition).filter(jobTitleCondition).forEach(jobPosting -> result.add(jobPosting));
-        } else if (workingTimeId != 0 && workingTypeId == 0 && cityId != 0 && jobTitleId == 0) {
-            stream.filter(workingTimeCondition).filter(cityCondition).forEach(jobPosting -> result.add(jobPosting));
-        } else if (workingTimeId != 0 && workingTypeId != 0 && cityId == 0 && jobTitleId == 0) {
-            stream.filter(workingTimeCondition).filter(workingTypeCondition).forEach(jobPosting -> result.add(jobPosting));
-        } else if (workingTimeId == 0 && workingTypeId == 0 && cityId == 0 && jobTitleId != 0) {
-            stream.filter(jobTitleCondition).forEach(jobPosting -> result.add(jobPosting));
-        } else if (workingTimeId == 0 && workingTypeId == 0 && cityId != 0 && jobTitleId == 0) {
-            stream.filter(cityCondition).forEach(jobPosting -> result.add(jobPosting));
-        } else if (workingTimeId == 0 && workingTypeId != 0 && cityId == 0 && jobTitleId == 0) {
-            stream.filter(workingTypeCondition).forEach(jobPosting -> result.add(jobPosting));
-        } else if (workingTimeId != 0 && workingTypeId == 0 && cityId == 0 && jobTitleId == 0) {
-            stream.filter(workingTimeCondition).forEach(jobPosting -> result.add(jobPosting));
-        } else if (workingTimeId != 0 && workingTypeId != 0 && cityId != 0 && jobTitleId != 0) {
-            stream.filter(workingTimeCondition).filter(workingTypeCondition).filter(cityCondition).filter(jobTitleCondition).forEach(jobPosting -> result.add(jobPosting));
-        } else {
-            return getAllActiveOnesSortedByPostingDate().getData();
-        }
+        Stream<JobPosting> stream = getAllActiveOnesSortedByPostingDate().getData().stream();
+
+        Predicate<JobPosting> cityCondition = cityId != 0
+                ? (jobPosting -> jobPosting.getCity().getId() == cityId)
+                : (jobPosting -> jobPosting.getCity().getId() > 0);
+        Predicate<JobPosting> jobTitleCondition = jobTitleId != 0
+                ? (jobPosting -> jobPosting.getJobTitle().getId() == jobTitleId)
+                : (jobPosting -> jobPosting.getJobTitle().getId() > 0);
+        Predicate<JobPosting> workingTimeCondition = workingTimeId != 0
+                ? (jobPosting -> jobPosting.getWorkingTime().getId() == workingTimeId)
+                : (jobPosting -> jobPosting.getWorkingTime().getId() > 0);
+        Predicate<JobPosting> workingTypeCondition = workingTypeId != 0
+                ? (jobPosting -> jobPosting.getWorkingType().getId() == workingTypeId)
+                : (jobPosting -> jobPosting.getWorkingType().getId() > 0);
+
+        stream.filter(workingTimeCondition).filter(workingTypeCondition).filter(cityCondition).filter(jobTitleCondition).forEach(jobPosting -> result.add(jobPosting));
 
         return result;
     }

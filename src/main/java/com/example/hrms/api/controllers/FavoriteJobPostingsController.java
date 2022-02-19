@@ -4,6 +4,7 @@ import com.example.hrms.business.abstracts.FavoriteJobPostingService;
 import com.example.hrms.core.utilities.results.DataResult;
 import com.example.hrms.core.utilities.results.Result;
 import com.example.hrms.entities.concretes.FavoriteJobPosting;
+import com.example.hrms.entities.concretes.JobPosting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,9 +47,9 @@ public class FavoriteJobPostingsController {
         return favoriteJobPostingService.getAllByCandidateId(candidateId);
     }
 
-    @GetMapping("/getAllByCandidateIdSortedByDateOfAddToFavorites")
-    public DataResult<List<FavoriteJobPosting>> getAllByCandidateIdSortedByDateOfAddToFavorites(@RequestParam int candidateId) {
-        return favoriteJobPostingService.getAllByCandidateIdSortedByDateOfAddToFavorites(candidateId);
+    @GetMapping("/getAllActiveJobPostingsByCandidateIdSortedByDateOfAddToFavorites")
+    public DataResult<List<JobPosting>> getAllActiveJobPostingsByCandidateIdSortedByDateOfAddToFavorites(@RequestParam int candidateId) {
+        return favoriteJobPostingService.getAllActiveJobPostingsByCandidateIdSortedByDateOfAddToFavorites(candidateId);
     }
 
 }

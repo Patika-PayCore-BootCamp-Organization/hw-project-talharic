@@ -1,17 +1,16 @@
 package com.example.hrms.business.concretes;
 
 import com.example.hrms.business.abstracts.FavoriteJobPostingService;
-import com.example.hrms.core.utilities.results.DataResult;
-import com.example.hrms.core.utilities.results.Result;
-import com.example.hrms.core.utilities.results.SuccessDataResult;
-import com.example.hrms.core.utilities.results.SuccessResult;
+import com.example.hrms.core.utilities.results.*;
 import com.example.hrms.dataAccess.abstracts.FavoriteJobPostingDao;
 import com.example.hrms.entities.concretes.FavoriteJobPosting;
+import com.example.hrms.entities.concretes.JobPosting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,10 +26,14 @@ public class FavoriteJobPostingManager implements FavoriteJobPostingService {
     @Override
     public Result add(FavoriteJobPosting favoriteJobPosting) {
 
-        favoriteJobPosting.setDateOfAddToFavorites(LocalDateTime.now());
+        if (getByCandidateIdAndJobPostingId(favoriteJobPosting.getCandidate().getId(), favoriteJobPosting.getJobPosting().getId()).getData() == null) {
+            favoriteJobPosting.setDateOfAddToFavorites(LocalDateTime.now());
+            favoriteJobPostingDao.save(favoriteJobPosting);
 
-        favoriteJobPostingDao.save(favoriteJobPosting);
-        return new SuccessResult();
+            return new SuccessResult("İlan favorilere eklendi.");
+        }
+
+        return new ErrorResult();
     }
 
     @Override
@@ -44,7 +47,7 @@ public class FavoriteJobPostingManager implements FavoriteJobPostingService {
     public Result delete(int id) {
 
         favoriteJobPostingDao.deleteById(id);
-        return new SuccessResult();
+        return new SuccessResult("İlan favorilerden kaldırıldı.");
     }
 
     @Override
@@ -63,11 +66,26 @@ public class FavoriteJobPostingManager implements FavoriteJobPostingService {
     }
 
     @Override
-    public DataResult<List<FavoriteJobPosting>> getAllByCandidateIdSortedByDateOfAddToFavorites(int candidateId) {
+    public DataResult<List<JobPosting>> getAllActiveJobPostingsByCandidateIdSortedByDateOfAddToFavorites(int candidateId) {
+
+        List<JobPosting> jobPostings = new ArrayList<JobPosting>();
 
         Sort sort = Sort.by(Sort.Direction.DESC, "dateOfAddToFavorites");
 
-        return new SuccessDataResult<List<FavoriteJobPosting>>(favoriteJobPostingDao.getByCandidate_Id(candidateId, sort));
+        for (FavoriteJobPosting favoriteJobPosting : favoriteJobPostingDao.getByCandidate_Id(candidateId, sort)) {
+            if (favoriteJobPosting.getJobPosting().isActive()) {
+                jobPostings.add(favoriteJobPosting.getJobPosting());
+            } else {
+                delete(favoriteJobPosting.getId());
+            }
+        }
+
+        return new SuccessDataResult<List<JobPosting>>(jobPostings);
+    }
+
+    @Override
+    public DataResult<FavoriteJobPosting> getByCandidateIdAndJobPostingId(int candidateId, int jobPostingId) {
+        return new SuccessDataResult<FavoriteJobPosting>(favoriteJobPostingDao.getByCandidate_IdAndJobPosting_Id(candidateId, jobPostingId));
     }
 
 }
