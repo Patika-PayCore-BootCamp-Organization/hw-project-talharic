@@ -9,4 +9,6 @@ public interface UserConfirmationService extends BaseEntityService<UserConfirmat
 
     DataResult<List<UserConfirmation>> getAllByUserId(int userId);
 
+    DataResult<List<UserConfirmation>> getAllByIsConfirmedAndUserConfirmationTypeId(boolean isConfirmed, int userConfirmationTypeId);
+
 }

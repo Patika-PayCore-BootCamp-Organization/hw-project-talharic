@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface EmployerDao extends JpaRepository<Employer, Integer>{
+public interface EmployerDao extends JpaRepository<Employer, Integer> {
 
-    List<Employer> getByIsActivatedAndIsConfirmed(boolean isActivated, boolean isConfirmed);
+    List<Employer> getByUserActivation_IsActivated(boolean isActivated);
+
+    List<Employer> getByUserConfirmations_IsConfirmedAndUserConfirmations_UserConfirmationType_Id(boolean isConfirmed, int userConfirmationTypeId);
 
 }

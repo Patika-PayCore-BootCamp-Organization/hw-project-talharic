@@ -9,4 +9,6 @@ public interface UserConfirmationDao extends JpaRepository<UserConfirmation, Int
 
     List<UserConfirmation> getByUser_Id(int userId);
 
+    List<UserConfirmation> getByIsConfirmedAndUserConfirmationType_Id(boolean isConfirmed, int userConfirmationTypeId);
+
 }

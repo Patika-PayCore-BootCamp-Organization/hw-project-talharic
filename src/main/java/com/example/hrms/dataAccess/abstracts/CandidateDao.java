@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface CandidateDao extends JpaRepository<Candidate, Integer> {
 
-    Candidate getByIdentityNumber(String identityNumber);
+    List<Candidate> getByUserActivation_IsActivated(boolean isActivated);
 
-    List<Candidate> getByIsActivated(boolean isActivated);
+    Candidate getByIdentityNumber(String identityNumber);
 
 }

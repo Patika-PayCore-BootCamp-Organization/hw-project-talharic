@@ -31,6 +31,7 @@ public class UserActivationManager implements UserActivationService {
     @Override
     public Result add(UserActivation userActivation) {
 
+        userActivation.setActivated(false);
         userActivation.setCode(generateCode());
         userActivation.setIsActivatedDate(LocalDateTime.now());
 
@@ -46,9 +47,9 @@ public class UserActivationManager implements UserActivationService {
     }
 
     @Override
-    public Result delete(UserActivation userActivation) {
+    public Result delete(int id) {
 
-        userActivationDao.delete(userActivation);
+        userActivationDao.deleteById(id);
         return new SuccessResult();
     }
 
@@ -71,6 +72,12 @@ public class UserActivationManager implements UserActivationService {
     public DataResult<UserActivation> getByUserId(int userId) {
         return new SuccessDataResult<UserActivation>(userActivationDao.getByUser_Id(userId));
     }
+
+    @Override
+    public DataResult<List<UserActivation>> getAllByIsActivated(boolean isActivated) {
+        return new SuccessDataResult<List<UserActivation>>(userActivationDao.getByIsActivated(isActivated));
+    }
+
 
     private String generateCode() {
 

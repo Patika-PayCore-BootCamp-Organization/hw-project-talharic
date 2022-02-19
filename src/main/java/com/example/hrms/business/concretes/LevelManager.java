@@ -37,9 +37,9 @@ public class LevelManager implements LevelService {
     }
 
     @Override
-    public Result delete(Level level) {
+    public Result delete(int id) {
 
-        levelDao.delete(level);
+        levelDao.deleteById(id);
         return new SuccessResult();
     }
 

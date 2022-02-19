@@ -53,9 +53,9 @@ public class ResumeManager implements ResumeService {
     }
 
     @Override
-    public Result delete(Resume resume) {
+    public Result delete(int id) {
 
-        resumeDao.delete(resume);
+        resumeDao.deleteById(id);
         return new SuccessResult("Özgeçmiş silindi.");
     }
 
@@ -95,7 +95,7 @@ public class ResumeManager implements ResumeService {
         List<ResumeWithAllRelatedEntitiesDto> resumes = new ArrayList<ResumeWithAllRelatedEntitiesDto>();
 
         for (Resume resume : getAll().getData()) {
-            if (resume.getCandidate().isActivated() == true ) {
+            if (resume.getCandidate().getUserActivation().isActivated() == true ) {
                 resumes.add(getResumeDetailsByCandidateId(resume.getCandidate().getId()).getData());
             }
         };

@@ -39,8 +39,6 @@ public class CandidateManager implements CandidateService {
 
         validateCandidate(candidate);
 
-        candidate.setActivated(false);
-
         candidateDao.save(candidate);
         resumeService.add(new Resume(candidate));
         return userActivationService.add(new UserActivation(candidate));
@@ -56,9 +54,9 @@ public class CandidateManager implements CandidateService {
     }
 
     @Override
-    public Result delete(Candidate candidate) {
+    public Result delete(int id) {
 
-        candidateDao.delete(candidate);
+        candidateDao.deleteById(id);;
         return new SuccessResult("İş arayan silindi.");
     }
 
@@ -83,7 +81,7 @@ public class CandidateManager implements CandidateService {
 
         Candidate candidate = getById(userActivation.getUser().getId()).getData();
 
-        candidate.setActivated(true);
+        userActivation.setActivated(true);
         userActivation.setIsActivatedDate(LocalDateTime.now());
 
         candidateDao.save(candidate);
@@ -93,7 +91,7 @@ public class CandidateManager implements CandidateService {
 
     @Override
     public DataResult<List<Candidate>> getAllByIsActivated(boolean isActivated) {
-        return new SuccessDataResult<List<Candidate>>(candidateDao.getByIsActivated(isActivated));
+        return new SuccessDataResult<List<Candidate>>(candidateDao.getByUserActivation_IsActivated(isActivated));
     }
 
     @Override

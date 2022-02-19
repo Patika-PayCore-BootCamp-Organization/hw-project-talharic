@@ -37,9 +37,9 @@ public class WorkingTypeManager implements WorkingTypeService {
     }
 
     @Override
-    public Result delete(WorkingType workingType) {
+    public Result delete(int id) {
 
-        workingTypeDao.delete(workingType);
+        workingTypeDao.deleteById(id);
         return new SuccessResult();
     }
 

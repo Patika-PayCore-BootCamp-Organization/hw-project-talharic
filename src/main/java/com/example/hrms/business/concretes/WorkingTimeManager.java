@@ -37,9 +37,9 @@ public class WorkingTimeManager implements WorkingTimeService {
     }
 
     @Override
-    public Result delete(WorkingTime workingTime) {
+    public Result delete(int id) {
 
-        workingTimeDao.delete(workingTime);
+        workingTimeDao.deleteById(id);
         return new SuccessResult();
     }
 

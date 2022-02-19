@@ -41,9 +41,9 @@ public class UserConfirmationManager implements UserConfirmationService {
     }
 
     @Override
-    public Result delete(UserConfirmation userConfirmation) {
+    public Result delete(int id) {
 
-        userConfirmationDao.delete(userConfirmation);
+        userConfirmationDao.deleteById(id);
         return new SuccessResult();
     }
 
@@ -60,6 +60,11 @@ public class UserConfirmationManager implements UserConfirmationService {
     @Override
     public DataResult<List<UserConfirmation>> getAllByUserId(int userId) {
         return new SuccessDataResult<List<UserConfirmation>>(userConfirmationDao.getByUser_Id(userId));
+    }
+
+    @Override
+    public DataResult<List<UserConfirmation>> getAllByIsConfirmedAndUserConfirmationTypeId(boolean isConfirmed, int userConfirmationTypeId) {
+        return new SuccessDataResult<List<UserConfirmation>>(userConfirmationDao.getByIsConfirmedAndUserConfirmationType_Id(isConfirmed, userConfirmationTypeId));
     }
 
 }

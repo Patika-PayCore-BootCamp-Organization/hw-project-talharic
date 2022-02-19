@@ -1,5 +1,6 @@
 package com.example.hrms.entities.concretes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,9 +44,6 @@ public class JobPosting {
     @Column(name = "is_active")
     private boolean isActive;
 
-    @Column(name = "is_confirmed")
-    private boolean isConfirmed;
-
     @ManyToOne()
     @JoinColumn(name = "employer_id")
     private Employer employer;
@@ -65,5 +63,9 @@ public class JobPosting {
     @ManyToOne()
     @JoinColumn(name = "working_type_id")
     private WorkingType workingType;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "jobPosting")
+    private JobPostingConfirmation jobPostingConfirmation;
 
 }

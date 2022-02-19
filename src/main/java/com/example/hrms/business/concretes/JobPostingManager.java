@@ -2,12 +2,14 @@ package com.example.hrms.business.concretes;
 
 import com.example.hrms.business.abstracts.CompanyStaffService;
 import com.example.hrms.business.abstracts.JobPostingConfirmationService;
+import com.example.hrms.business.abstracts.JobPostingConfirmationTypeService;
 import com.example.hrms.business.abstracts.JobPostingService;
 import com.example.hrms.core.utilities.results.*;
 import com.example.hrms.dataAccess.abstracts.JobPostingDao;
 import com.example.hrms.entities.concretes.CompanyStaff;
 import com.example.hrms.entities.concretes.JobPosting;
 import com.example.hrms.entities.concretes.JobPostingConfirmation;
+import com.example.hrms.entities.concretes.JobPostingConfirmationType;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,11 +27,13 @@ public class JobPostingManager implements JobPostingService {
 
     private JobPostingDao jobPostingDao;
     private JobPostingConfirmationService jobPostingConfirmationService;
+    private JobPostingConfirmationTypeService jobPostingConfirmationTypeService;
     private CompanyStaffService companyStaffService;
 
-    public JobPostingManager(JobPostingDao jobPostingDao, JobPostingConfirmationService jobPostingConfirmationService, CompanyStaffService companyStaffService) {
+    public JobPostingManager(JobPostingDao jobPostingDao, JobPostingConfirmationService jobPostingConfirmationService, JobPostingConfirmationTypeService jobPostingConfirmationTypeService, CompanyStaffService companyStaffService) {
         this.jobPostingDao = jobPostingDao;
         this.jobPostingConfirmationService = jobPostingConfirmationService;
+        this.jobPostingConfirmationTypeService = jobPostingConfirmationTypeService;
         this.companyStaffService = companyStaffService;
     }
 
@@ -38,7 +42,6 @@ public class JobPostingManager implements JobPostingService {
 
         jobPosting.setPostingDate(LocalDateTime.now());
         jobPosting.setActive(false);
-        jobPosting.setConfirmed(false);
 
         jobPostingDao.save(jobPosting);
         return new SuccessResult("İş ilanı onay aşamasındadır.");
@@ -52,9 +55,9 @@ public class JobPostingManager implements JobPostingService {
     }
 
     @Override
-    public Result delete(JobPosting jobPosting) {
+    public Result delete(int id) {
 
-        jobPostingDao.delete(jobPosting);
+        jobPostingDao.deleteById(id);
         return new SuccessResult("İş ilanı silindi.");
     }
 
@@ -69,21 +72,21 @@ public class JobPostingManager implements JobPostingService {
     }
 
     @Override
-    public Result confirm(int jobPostingId, int companyStaffId, boolean isConfirmed) {
+    public Result confirm(int jobPostingId, int companyStaffId, int jobPostingConfirmationTypeId, boolean isConfirmed) {
 
         JobPosting jobPosting = getById(jobPostingId).getData();
         CompanyStaff companyStaff = companyStaffService.getById(companyStaffId).getData();
+        JobPostingConfirmationType jobPostingConfirmationType = jobPostingConfirmationTypeService.getById(jobPostingConfirmationTypeId).getData();
 
         if (!isConfirmed) {
-            delete(jobPosting);
+            delete(jobPosting.getId());
             return new ErrorResult("İş ilanı onaylanmadı.");
         }
 
         jobPosting.setActive(true);
-        jobPosting.setConfirmed(isConfirmed);
 
         jobPostingDao.save(jobPosting);
-        jobPostingConfirmationService.add(new JobPostingConfirmation(jobPosting, companyStaff));
+        jobPostingConfirmationService.add(new JobPostingConfirmation(jobPosting, companyStaff, jobPostingConfirmationType, isConfirmed));
         return new SuccessResult("İş ilanı onaylandı.");
     }
 

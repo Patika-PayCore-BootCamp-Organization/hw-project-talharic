@@ -2,6 +2,7 @@ package com.example.hrms.entities.concretes;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,10 +29,12 @@ public class Employer extends User {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "is_activated")
-    private boolean isActivated;
+    @JsonIgnore
+    @OneToOne(mappedBy = "user")
+    private UserActivation userActivation;
 
-    @Column(name = "is_confirmed")
-    private boolean isConfirmed;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<UserConfirmation> userConfirmations;
 
 }
