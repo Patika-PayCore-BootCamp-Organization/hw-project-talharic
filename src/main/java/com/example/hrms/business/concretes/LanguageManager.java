@@ -8,6 +8,7 @@ import com.example.hrms.core.utilities.results.SuccessResult;
 import com.example.hrms.dataAccess.abstracts.LanguageDao;
 import com.example.hrms.entities.concretes.Language;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,7 +46,10 @@ public class LanguageManager implements LanguageService {
 
     @Override
     public DataResult<List<Language>> getAll() {
-        return new SuccessDataResult<List<Language>>(languageDao.findAll());
+
+        Sort sort = Sort.by(Sort.Direction.ASC, "language");
+
+        return new SuccessDataResult<List<Language>>(languageDao.findAll(sort));
     }
 
     @Override

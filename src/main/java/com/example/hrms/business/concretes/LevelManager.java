@@ -8,6 +8,7 @@ import com.example.hrms.core.utilities.results.SuccessResult;
 import com.example.hrms.dataAccess.abstracts.LevelDao;
 import com.example.hrms.entities.concretes.Level;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,7 +46,10 @@ public class LevelManager implements LevelService {
 
     @Override
     public DataResult<List<Level>> getAll() {
-        return new SuccessDataResult<List<Level>>(levelDao.findAll());
+
+        Sort sort = Sort.by(Sort.Direction.ASC, "level");
+
+        return new SuccessDataResult<List<Level>>(levelDao.findAll(sort));
     }
 
     @Override

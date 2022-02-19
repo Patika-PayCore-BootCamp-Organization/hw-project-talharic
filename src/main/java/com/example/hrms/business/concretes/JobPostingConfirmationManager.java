@@ -60,4 +60,9 @@ public class JobPostingConfirmationManager implements JobPostingConfirmationServ
         return new SuccessDataResult<JobPostingConfirmation>(jobPostingConfirmationDao.getById(id));
     }
 
+    @Override
+    public DataResult<JobPostingConfirmation> getByJobPostingId(int jobPostingId) {
+        return new SuccessDataResult<JobPostingConfirmation>(jobPostingConfirmationDao.getByJobPosting_Id(jobPostingId));
+    }
+
 }

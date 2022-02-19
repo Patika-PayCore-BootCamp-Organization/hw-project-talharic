@@ -8,6 +8,7 @@ import com.example.hrms.core.utilities.results.SuccessResult;
 import com.example.hrms.dataAccess.abstracts.LinkNameDao;
 import com.example.hrms.entities.concretes.LinkName;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,7 +46,10 @@ public class LinkNameManager implements LinkNameService {
 
     @Override
     public DataResult<List<LinkName>> getAll() {
-        return new SuccessDataResult<List<LinkName>>(linkNameDao.findAll());
+
+        Sort sort = Sort.by(Sort.Direction.ASC, "name");
+
+        return new SuccessDataResult<List<LinkName>>(linkNameDao.findAll(sort));
     }
 
     @Override

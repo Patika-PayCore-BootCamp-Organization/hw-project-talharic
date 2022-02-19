@@ -107,8 +107,8 @@ public class JobPostingManager implements JobPostingService {
     }
 
     @Override
-    public DataResult<List<JobPosting>> getAllActiveOnes() {
-        return new SuccessDataResult<List<JobPosting>>(jobPostingDao.getByIsActive(true));
+    public DataResult<List<JobPosting>> getAllByIsActive(boolean isActive) {
+        return new SuccessDataResult<List<JobPosting>>(jobPostingDao.getByIsActive(isActive));
     }
 
     @Override
@@ -154,23 +154,6 @@ public class JobPostingManager implements JobPostingService {
     @Override
     public DataResult<List<JobPosting>> getAllActiveOnesFilteredByCityAndJobTitleAndWorkingTimeAndWorkingType(int cityId, int jobTitleId, int workingTimeId, int workingTypeId) {
 
-        List<JobPosting> result = getAllActiveOnesFilteredByCityAndJobTitleAndWorkingTimeAndWorkingTypeBase(cityId, jobTitleId, workingTimeId, workingTypeId);
-
-        return new SuccessDataResult<List<JobPosting>>(result);
-    }
-
-    @Override
-    public DataResult<List<JobPosting>> getAllActiveOnesByPageFilteredByCityAndJobTitleAndWorkingTimeAndWorkingType(int cityId, int jobTitleId, int workingTimeId, int workingTypeId, int pageNo, int pageSize) {
-
-        int skipCount = (pageNo -1) * pageSize;
-
-        List<JobPosting> result = getAllActiveOnesFilteredByCityAndJobTitleAndWorkingTimeAndWorkingTypeBase(cityId, jobTitleId, workingTimeId, workingTypeId);
-
-        return new SuccessDataResult<List<JobPosting>>(result.stream().skip(skipCount).limit(pageSize).collect(Collectors.toList()));
-    }
-
-    private List<JobPosting> getAllActiveOnesFilteredByCityAndJobTitleAndWorkingTimeAndWorkingTypeBase(int cityId, int jobTitleId, int workingTimeId, int workingTypeId) {
-
         List<JobPosting> result = new ArrayList<JobPosting>();
 
         Stream<JobPosting> stream = getAllActiveOnesSortedByPostingDate().getData().stream();
@@ -190,7 +173,32 @@ public class JobPostingManager implements JobPostingService {
 
         stream.filter(workingTimeCondition).filter(workingTypeCondition).filter(cityCondition).filter(jobTitleCondition).forEach(jobPosting -> result.add(jobPosting));
 
-        return result;
+        return new SuccessDataResult<List<JobPosting>>(result);
+    }
+
+    @Override
+    public DataResult<List<JobPosting>> getAllActiveOnesByPageFilteredByCityAndJobTitleAndWorkingTimeAndWorkingType(int cityId, int jobTitleId, int workingTimeId, int workingTypeId, int pageNo, int pageSize) {
+
+        int skipCount = (pageNo -1) * pageSize;
+
+        List<JobPosting> result = getAllActiveOnesFilteredByCityAndJobTitleAndWorkingTimeAndWorkingType(cityId, jobTitleId, workingTimeId, workingTypeId).getData();
+
+        return new SuccessDataResult<List<JobPosting>>(result.stream().skip(skipCount).limit(pageSize).collect(Collectors.toList()));
+    }
+
+    @Override
+    public DataResult<List<JobPosting>> getAllOnesThatWaitingForPostingConfirmation() {
+
+        List<JobPosting> result = new ArrayList<JobPosting>();
+        List<JobPosting> passiveJobPosting = getAllByIsActive(false).getData();
+
+        for (JobPosting jobPosting : passiveJobPosting) {
+            if (jobPostingConfirmationService.getByJobPostingId(jobPosting.getId()).getData() == null) {
+                result.add(jobPosting);
+            }
+        }
+
+        return new SuccessDataResult<List<JobPosting>>(result);
     }
 
 }

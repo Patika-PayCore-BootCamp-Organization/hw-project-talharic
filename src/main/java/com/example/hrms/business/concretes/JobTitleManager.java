@@ -7,6 +7,7 @@ import com.example.hrms.core.utilities.results.*;
 import com.example.hrms.dataAccess.abstracts.JobTitleDao;
 import com.example.hrms.entities.concretes.JobTitle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -47,7 +48,10 @@ public class JobTitleManager implements JobTitleService {
 
     @Override
     public DataResult<List<JobTitle>> getAll() {
-        return new SuccessDataResult<List<JobTitle>>(jobTitleDao.findAll());
+
+        Sort sort = Sort.by(Sort.Direction.ASC, "title");
+
+        return new SuccessDataResult<List<JobTitle>>(jobTitleDao.findAll(sort));
     }
 
     @Override
